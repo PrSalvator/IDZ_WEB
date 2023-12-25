@@ -1,0 +1,37 @@
+﻿@model List<IDZ.Models.ViewModels.Doctor_SpecialityVM>
+@{
+    ViewBag.Title = "Home Page";
+}
+<style>
+    table{
+        padding: 5%;
+    }
+    td{
+        margin: 5%;
+    }
+    h2{
+        margin: 3% 0%;
+    }
+    th {
+        font-size: 20px;
+    }
+</style>
+<h2>Наши врачи</h2>
+<div class="col-md-12" style="padding: 0px;">
+    <table class="col-md-12">
+        <thead>
+            <tr>
+                <th class="col-md-3"><p class="text-left">Доктор</p></th>
+                <th class="col-md-3"><p class="text-left">Специальность</p></th>
+                <th class="col-md-3"></th>
+                <th class="col-md-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(IDZ.Models.ViewModels.Doctor_SpecialityVM ds in Model)
+            {
+                { Html.RenderPartial("DoctorSpecialityPartialView", ds);}
+            }
+        </tbody>
+    </table>
+</div>

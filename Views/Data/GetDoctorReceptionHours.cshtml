@@ -1,0 +1,105 @@
+﻿@model List<IDZ.Models.Entities.APPOINTMENT>
+@{
+    ViewBag.Title = "GetDoctorReceptionHours";
+    TimeSpan hourStart = new TimeSpan(9, 0, 0);
+    TimeSpan hourEnd = new TimeSpan(18, 0, 0);
+    DateTime curDate = DateTime.Now;
+    List<IDZ.Models.Entities.RECEPTION_HOURS> rshours = ViewBag.ReceptionHours as List<IDZ.Models.Entities.RECEPTION_HOURS>;
+    DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+    TimeSpan minHour;
+    TimeSpan maxHour;
+    var a = Model.ToList();
+}
+<style>
+    table, td, td, tr, th {
+        border: solid;
+        border-width: 2px;
+        border-color: dimgrey;
+        padding: 1%;
+        text-align: center;
+    }
+    .inactive {
+        background: #e5e5e5;
+    }
+    .active {
+        background: #4cff00;
+    }
+    .froze{
+        background: #0094ff;
+    }
+</style>
+
+<h2>Часы приема врача</h2>
+<table class="col-md-12">
+    <thead>
+        <tr>
+            <th></th>
+            @for (int i = 0; i < 5; i++)
+            {
+                if (curDate.DayOfWeek == DayOfWeek.Saturday) { curDate = curDate.AddDays(2); }
+                else if (curDate.DayOfWeek == DayOfWeek.Sunday) { curDate = curDate.AddDays(1); }
+                <th>
+                    <p>@curDate.Date</p>
+                    <p>@curDate.DayOfWeek</p>
+                </th>
+                curDate = curDate.AddDays(1);
+            }
+        </tr>
+
+    </thead>
+    <tbody>
+        @{curDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hourStart.Hours, hourStart.Minutes, 0);}
+        @while (curDate.TimeOfDay < hourEnd)
+        {
+            curDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, curDate.Hour, curDate.Minute, 0);
+        <tr>
+            <td>
+                @curDate.TimeOfDay - @curDate.AddMinutes(30).TimeOfDay
+            </td>
+            @for (int i = 0; i < 5; i++)
+            {
+                if (curDate.DayOfWeek == DayOfWeek.Saturday) { curDate = curDate.AddDays(2); }
+                else if (curDate.DayOfWeek == DayOfWeek.Sunday) { curDate = curDate.AddDays(1); }
+                try
+                {
+                    minHour = rshours.Where(p => p.NUMBER_OF_DAY_WEEK == (int)curDate.DayOfWeek).OrderBy(h => h.HOUR_START).First().HOUR_START;
+                    maxHour = rshours.Where(p => p.NUMBER_OF_DAY_WEEK == (int)curDate.DayOfWeek).OrderBy(h => h.HOUR_END).Last().HOUR_END;
+                }
+                catch
+                {
+                    minHour = new TimeSpan(18, 0, 0);
+                    maxHour = new TimeSpan(18, 0, 0);
+                }
+
+                if (curDate.TimeOfDay >= minHour && (curDate.AddMinutes(30).TimeOfDay) <= maxHour)
+                {
+                    if (Model.Where(p => p.DATETIME.Date == curDate.Date).Any(p => p.DATETIME.TimeOfDay >= curDate.TimeOfDay && p.DATETIME.TimeOfDay < curDate.AddMinutes(30).TimeOfDay))
+                    {
+                        <td class="froze">Занято</td>
+                    }
+                    else if (User.IsInRole("Patient"))
+                    {
+                        <td class="active">
+                            @Html.ActionLink("Записаться на прием", "CreateAppointment", new { date = curDate })
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="active">
+                            Открыто для записи
+                        </td>
+                    }
+
+                }
+                else if (curDate.TimeOfDay < minHour || curDate.AddMinutes(30).TimeOfDay > maxHour)
+                {
+                    <td class="inactive">
+                    </td>
+                }
+                curDate = curDate.AddDays(1);
+            }
+        </tr>
+            curDate = curDate.AddMinutes(30);
+        }
+    </tbody>
+</table>

@@ -1,0 +1,29 @@
+﻿@model List<IDZ.Models.Entities.DOCTOR>
+<table>
+    @foreach (IDZ.Models.Entities.DOCTOR doctor in Model)
+    {
+        <tr>
+            <td class="col-md-2">
+                @doctor.LAST_NAME
+            </td>
+            <td class="col-md-2">
+                @doctor.FIRST_NAME
+            </td>
+            <td class="col-md-2">
+                @doctor.PATRONYMIC
+            </td>
+            <td class="col-md-3">
+                @Html.ActionLink("Редактировать ФИО", "EditDoctor", doctor.ID)
+            </td>
+            <td class="col-md-2">
+                @Html.ActionLink("Специальности", "EditSpecialityOfDoctor", doctor.ID)
+            </td>
+            <td class="col-md-1">
+                <a class="btn btn-default" href="@Url.Action("RemoveSpecialityOfDoctor", "Data", new { specialityId = speciality.ID })">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </td>
+        </tr>
+    }
+</table>
+

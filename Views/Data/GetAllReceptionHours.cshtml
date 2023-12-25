@@ -1,0 +1,90 @@
+﻿@model List<IDZ.Models.Entities.DOCTOR_RECEPTION_HOURS>
+
+@{
+    ViewBag.Title = "GetAllReceptionHours";
+}
+<style>
+    table, th, td{
+        border: solid 2px #808080;
+        padding: 1%;
+        text-align: center;
+    }
+    th{
+        background: #00ffff;
+    }
+</style>
+<h2>Часы приема врачей</h2>
+<table class="col-md-12">
+    <thead>
+        <tr>
+            <th>Доктор</th>
+            <th>Специальность</th>
+            <th>Понедельник</th>
+            <th>Вторник</th>
+            <th>Среда</th>
+            <th>Четверг</th>
+            <th>Пятница</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{List<IDZ.Models.Entities.DOCTOR_RECEPTION_HOURS> doctorAllSpeciality = new List<IDZ.Models.Entities.DOCTOR_RECEPTION_HOURS>();}
+        @foreach (var doctorFullName in Model.GroupBy(p => p.Доктор).ToList())
+        {
+            doctorAllSpeciality = Model.Where(p => p.Доктор == doctorFullName.Key).ToList();
+            foreach (var speciality in doctorAllSpeciality.GroupBy(p => p.Специальность))
+            {
+                <tr>
+                    @{List<IDZ.Models.Entities.DOCTOR_RECEPTION_HOURS> list = doctorAllSpeciality.Where(p => p.Специальность == speciality.Key).ToList();}
+                    <td>@list.First().Доктор</td>
+                    <td>@list.First().Специальность</td>
+                    <td>
+                        @if (list.Any(p => p.День_недели_приема == "понедельник"))
+                        {
+                            <p>
+                                @list.Where(p => p.День_недели_приема == "понедельник").First().Час_начала_приема -
+                                @list.Where(p => p.День_недели_приема == "понедельник").First().Час_конца_приема
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @if (list.Any(p => p.День_недели_приема == "вторник"))
+                        {
+                            <p>
+                                @list.Where(p => p.День_недели_приема == "вторник").First().Час_начала_приема -
+                                @list.Where(p => p.День_недели_приема == "вторник").First().Час_конца_приема
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @if (list.Any(p => p.День_недели_приема == "среда"))
+                        {
+                            <p>
+                                @list.Where(p => p.День_недели_приема == "среда").First().Час_начала_приема -
+                                @list.Where(p => p.День_недели_приема == "среда").First().Час_конца_приема
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @if (list.Any(p => p.День_недели_приема == "четверг"))
+                        {
+                            <p>
+                                @list.Where(p => p.День_недели_приема == "четверг").First().Час_начала_приема -
+                                @list.Where(p => p.День_недели_приема == "четверг").First().Час_конца_приема
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @if (list.Any(p => p.День_недели_приема == "пятница"))
+                        {
+                            <p>
+                                @list.Where(p => p.День_недели_приема == "пятница").First().Час_начала_приема -
+                                @list.Where(p => p.День_недели_приема == "пятница").First().Час_конца_приема
+                            </p>
+                        }
+                    </td>
+                </tr>
+
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,57 @@
+﻿@model List<IDZ.Models.ViewModels.Doctor_Reception_HoursVM>
+@{
+    ViewBag.Title = "AddReceptionHoursForDoctor";
+}
+<style>
+    th{
+        text-align: center;
+    }
+    table, th, td{
+        border: solid 2px #808080
+    }
+    th, td{
+        padding: 5px;
+    }
+</style>
+<h2>Редактирование часов приема врача</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Понедельник</th>
+            <th>Вторник</th>
+            <th>Среда</th>
+            <th>Четверг</th>
+            <th>Пятница</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            @for (int i = 1; i < 6; i++)
+            {
+
+                using (Html.BeginForm())
+                {
+                    <td>
+                        @Html.Hidden("dayOfWeek", i)
+                        @if (Model.Any(p => p.Day_Of_Week == i))
+                        {
+                            @Html.TextBox("startHour", Model.Where(p => p.Day_Of_Week == i).First().Start_Hour, htmlAttributes: new { type = "time" })
+                            @Html.TextBox("endHour", Model.Where(p => p.Day_Of_Week == i).First().End_Hour, htmlAttributes: new { type = "time" })
+                        }
+                        else
+                        {
+                            @Html.TextBox("startHour", null, htmlAttributes: new { type = "time" })
+                            @Html.TextBox("endHour", null, htmlAttributes: new { type = "time" })
+                        }
+                        <button type="submit">
+                            <i class="bi bi-check"></i>
+                        </button>
+                    </td>
+                }
+
+            }
+        </tr>
+    </tbody>
+</table>
+

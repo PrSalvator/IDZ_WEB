@@ -1,0 +1,63 @@
+﻿@model List<IDZ.Models.Entities.DOCTOR>
+
+@{
+    ViewBag.Title = "GetDoctors";
+}
+<style>
+    tfoot{
+        padding: 10px;
+    }
+    td, th{
+        padding-top: 5px;
+    }
+</style>
+<h2>Наши врачи (редактирование)</h2>
+<div>
+    <div class="col-md-12" style="padding: 0px;">
+        <table class="col-md-12">
+            <thead>
+                <tr>
+                    <th class="col-md-2"><p class="text-left">Фамилия</p></th>
+                    <th class="col-md-2"><p class="text-left">Имя</p></th>
+                    <th class="col-md-2"><p class="text-left">Отчество</p></th>
+                    <th class="col-md-2"></th>
+                    <th class="col-md-2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (IDZ.Models.Entities.DOCTOR doctor in Model)
+                {
+                    <tr>
+                        <td class="col-md-2">
+                            @doctor.LAST_NAME
+                        </td>
+                        <td class="col-md-2">
+                            @doctor.FIRST_NAME
+                        </td>
+                        <td class="col-md-2">
+                            @doctor.PATRONYMIC
+                        </td>
+                        <td class="col-md-2">
+                            @Html.ActionLink("Редактировать ФИО", "EditDoctor", new { doctorId = doctor.ID })
+                        </td>
+                        <td class="col-md-2">
+                            @Html.ActionLink("Специальности", "EditSpecialityOfDoctor", new { doctorId = doctor.ID })
+                        </td>
+                        <td class="col-md-2">
+                            <a class="btn btn-default" href="@Url.Action("DeleteDoctor", "Data", new { doctorId = doctor.ID })">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="btn btn-default">
+                        @Html.ActionLink("Добавить", "CreateDoctor", "Data", htmlAttributes: new { @class="text-decoration-none" })
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
